@@ -1,15 +1,12 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using Assignment.Models.DomainClass;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
-namespace Assignment.Models.DomainClass
+namespace Assignment.Models.ViewModel
 {
-    public class Product
+    public class Product_Img
     {
-        [Key]
-        public int Id { get; set; }
-        [Required]
-        [MaxLength(100)]
         [DisplayName("Tên sản phẩm")]
         public string Name { get; set; }
         [Required]
@@ -20,14 +17,18 @@ namespace Assignment.Models.DomainClass
         public float Price { get; set; }
         [Required]
         [DisplayName("Hình ảnh chính")]
-        public string ImageMainUrl {  get; set; }
+        public string ImageMainUrl { get; set; }
         [Required]
         [DisplayName("Thương hiệu")]
-        public int BrandID {  get; set; }
+        public int BrandID { get; set; }
         [DisplayName("Thương hiệu")]
-      
         public Brand Brand { get; set; }
-        public ICollection<ProductImg> ProductImgs { get; set;} = new List<ProductImg>();
-		public ICollection<ProductVariant> ProductVariants { get; set;}
+
+        [DisplayName("Ảnh 1")]
+        public string Url1 { get; set; }
+        [DisplayName("Ảnh 2")]
+        public string Url2 { get; set; }
+        [DisplayName("Ảnh 3")]
+        public string Url3 { get; set; }
     }
 }

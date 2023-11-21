@@ -62,14 +62,14 @@ namespace Assignment.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductID,Url1,Url2,Url3")] ProductImg productImg, IFormFile file1, IFormFile file2, IFormFile file3)
+        public async Task<IActionResult> Create([Bind("ProductID,Url1,Url2,Url3")] ProductImg productImg, IFormFile Url1, IFormFile Url2, IFormFile Url3)
         {
             if (!ModelState.IsValid)
             {
                 // Xử lý tải lên hình ảnh và lưu vào bảng ProductImg
-                productImg.Url1 = await ProcessImage(file1);
-                productImg.Url2 = await ProcessImage(file2);
-                productImg.Url3 = await ProcessImage(file3);
+                productImg.Url1 = await ProcessImage(Url1);
+                productImg.Url2 = await ProcessImage(Url2);
+                productImg.Url3 = await ProcessImage(Url3);
 
                 _context.Add(productImg);
                 await _context.SaveChangesAsync();
@@ -112,7 +112,7 @@ namespace Assignment.Controllers
             }
 
             // Trả về đường dẫn của tệp mới
-            return $"uploads/{newFileName}";
+            return $"/uploads/{newFileName}";
         }
 
         // GET: ProductImgs/Edit/5

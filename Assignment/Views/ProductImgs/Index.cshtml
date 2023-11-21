@@ -2,61 +2,67 @@
 @model IEnumerable<Assignment.Models.DomainClass.ProductImg>
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Thêm mới</a>
+	<a asp-action="Create">Thêm mới</a>
 </p>
 
 @{
-    var students = ViewData["ListProduct"] as List<Product>;
+	var students = ViewData["ListProduct"] as List<Product>;
 }
- <div>@students[0].Name</div>
-
+<div>@students[0].Name</div>
+<div>@((ViewData["ListProduct"] as List<Product>)[0].Name)</div>
 
 
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Product)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Url1)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Url2)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Url3)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Url1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Url2)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Url3)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Product)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Url1)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Url2)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Url3)
+			</th>
+			<th>
+				Thao tác
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr class=" align-middle">
+				<td>
+					@Html.DisplayFor(modelItem => item.Product.Name)
+				</td>
+				<td>
+
+					<img style="width:90px" src="@item.Url1" alt="Product Image" />
+				</td>
+				<td>
+
+					<img style="width:90px" src="@item.Url2" alt="Product Image" />
+				</td>
+				<td>
+
+					<img style="width:90px" src="@item.Url3" alt="Product Image" />
+				</td>
+				<td>
+					<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+					<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+					<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>

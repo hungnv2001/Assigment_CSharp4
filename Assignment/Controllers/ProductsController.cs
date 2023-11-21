@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Assignment.Models.Context;
 using Assignment.Models.DomainClass;
 using Microsoft.Extensions.Hosting;
+using System.Security.Policy;
+using Assignment.Models;
+using SQLitePCL;
+using Assignment.Models.ViewModel;
 
 namespace Assignment.Controllers
 {
@@ -40,11 +44,12 @@ namespace Assignment.Controllers
             var product = await _context.Products
                 .Include(p => p.Brand)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            product.ProductImgs = _context.ProductImgs.Where(p => p.ProductID == id).ToList();
             if (product == null)
             {
                 return NotFound();
             }
-           
+
             return View(product);
         }
 
@@ -52,6 +57,7 @@ namespace Assignment.Controllers
         public IActionResult Create()
         {
             ViewData["BrandID"] = new SelectList(_context.Brands, "Id", "Name");
+
             return View();
         }
 
@@ -60,35 +66,36 @@ namespace Assignment.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,BrandID")] Product product, IFormFile ImageMainUrl)
+        public async Task<IActionResult> Create(Models.ViewModel.Product_Img viewModel, IFormFile ImageMainUrl, IFormFile Url1, IFormFile Url2, IFormFile Url3)
         {
+            var product = new Product();
             if (!ModelState.IsValid)
             {
-                if (ImageMainUrl != null && ImageMainUrl.Length > 0)
-                {
-                    // Lưu hình ảnh vào thư mục hoặc cloud storage tùy thuộc vào yêu cầu của bạn
-                    // Ví dụ sử dụng thư mục lưu trữ local
-                    var uploadPath = Path.Combine(_environment.WebRootPath, "uploads");
-                    if (!Directory.Exists(uploadPath))
-                    {
-                        Directory.CreateDirectory(uploadPath);
-                    }
+               product = new Product()
+               {
+                    Name = viewModel.Name,
+                    Brand = viewModel.Brand,
+                    BrandID = viewModel.BrandID,
+                    Description = viewModel.Description,
+                    Price = viewModel.Price,
 
-                    // Tạo tên tệp duy nhất để tránh trùng lặp
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageMainUrl.FileName);
-                    var filePath = Path.Combine(uploadPath, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await ImageMainUrl.CopyToAsync(stream);
-                    }
-
-                    // Lưu đường dẫn của hình ảnh vào trường ImageMainUrl
-                    product.ImageMainUrl = "/uploads/" + fileName;
-                }
-
+                };
+                product.ImageMainUrl = await ProcessImage(ImageMainUrl);
                 _context.Add(product);
+
                 await _context.SaveChangesAsync();
+                var productImg = new ProductImg()
+                {
+                    ProductID =  _context.Products.OrderBy(p=>p.Id).Last().Id,
+
+                };
+                productImg.Url1 = await ProcessImage(Url1);
+                productImg.Url2 = await ProcessImage(Url2);
+                productImg.Url3 = await ProcessImage(Url3);
+                _context.Add(productImg);
+
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -131,28 +138,7 @@ namespace Assignment.Controllers
             {
                 try
                 {
-                    if (ImageMainUrl != null && ImageMainUrl.Length > 0)
-                    {
-                        // Lưu hình ảnh vào thư mục hoặc cloud storage tùy thuộc vào yêu cầu của bạn
-                        // Ví dụ sử dụng thư mục lưu trữ local
-                        var uploadPath = Path.Combine(_environment.WebRootPath, "uploads");
-                        if (!Directory.Exists(uploadPath))
-                        {
-                            Directory.CreateDirectory(uploadPath);
-                        }
-
-                        // Tạo tên tệp duy nhất để tránh trùng lặp
-                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageMainUrl.FileName);
-                        var filePath = Path.Combine(uploadPath, fileName);
-
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await ImageMainUrl.CopyToAsync(stream);
-                        }
-
-                        // Lưu đường dẫn của hình ảnh vào trường ImageMainUrl
-                        product.ImageMainUrl = "/uploads/" + fileName;
-                    }
+                    product.ImageMainUrl = await ProcessImage(ImageMainUrl);
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
@@ -172,7 +158,39 @@ namespace Assignment.Controllers
             ViewData["BrandID"] = new SelectList(_context.Brands, "Id", "Name", product.BrandID);
             return View(product);
         }
+        private async Task<string> ProcessImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return null; // Không có tệp hoặc tệp trống
+            }
 
+            // Đổi tên tệp để tránh trùng lặp và xử lý các kí tự đặc biệt
+            var fileName = Path.GetFileNameWithoutExtension(file.FileName);
+            var fileExtension = Path.GetExtension(file.FileName);
+            var newFileName = $"{Guid.NewGuid()}{fileExtension}";
+
+            // Đường dẫn thư mục lưu trữ ảnh (chỉ là một ví dụ, bạn cần thay đổi tùy thuộc vào cấu trúc thư mục của bạn)
+            var uploadPath = Path.Combine(_environment.WebRootPath, "uploads");
+
+            // Đường dẫn đầy đủ của tệp mới
+            var filePath = Path.Combine(uploadPath, newFileName);
+
+            // Kiểm tra xem thư mục lưu trữ đã tồn tại chưa, nếu chưa thì tạo mới
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+
+            // Lưu tệp vào thư mục lưu trữ
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            // Trả về đường dẫn của tệp mới
+            return $"/uploads/{newFileName}";
+        }
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -206,14 +224,14 @@ namespace Assignment.Controllers
             {
                 _context.Products.Remove(product);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProductExists(int id)
         {
-          return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
