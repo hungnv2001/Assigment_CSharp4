@@ -9,6 +9,7 @@ namespace Assignment.Models.DomainClass
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
+        public int Status {  get; set; }
         public ICollection<ProductVariant> ProductVariants { get; set;}
     }
 }

@@ -25,8 +25,9 @@ namespace Assignment.Models.DomainClass
         [DisplayName("Thương hiệu")]
         public int BrandID {  get; set; }
         [DisplayName("Thương hiệu")]
-      
         public Brand Brand { get; set; }
+        [DisplayName("Trạng thái")]
+        public int Status {  get; set; }
         public ICollection<ProductImg> ProductImgs { get; set;} = new List<ProductImg>();
 		public ICollection<ProductVariant> ProductVariants { get; set;}
     }
