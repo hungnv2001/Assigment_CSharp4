@@ -27,7 +27,7 @@ namespace Assignment.Controllers
         }
 
         // GET: Invoices/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null || _context.Invoices == null)
             {
@@ -91,7 +91,7 @@ namespace Assignment.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TotalPrice,BoughtAt,Status,CustomerID")] Invoice invoice)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,TotalPrice,BoughtAt,Status,CustomerID")] Invoice invoice)
         {
             if (id != invoice.Id)
             {
@@ -123,7 +123,7 @@ namespace Assignment.Controllers
         }
 
         // GET: Invoices/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null || _context.Invoices == null)
             {
@@ -160,7 +160,7 @@ namespace Assignment.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool InvoiceExists(int id)
+        private bool InvoiceExists(Guid id)
         {
           return (_context.Invoices?.Any(e => e.Id == id)).GetValueOrDefault();
         }

@@ -20,7 +20,7 @@ namespace Assignment.Models.ViewModel
         public string ImageMainUrl { get; set; }
         [Required]
         [DisplayName("Thương hiệu")]
-        public int BrandID { get; set; }
+        public Guid BrandID { get; set; }
         [DisplayName("Thương hiệu")]
         public Brand Brand { get; set; }
 

@@ -7,10 +7,10 @@ namespace Assignment.Models.DomainClass
     public class ProductImg
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [Required]
         [DisplayName("Tên sản phẩm")]
-        public int ProductID {  get; set; }
+        public Guid ProductID {  get; set; }
 
         [ForeignKey("ProductID")]
         public Product Product { get; set; }

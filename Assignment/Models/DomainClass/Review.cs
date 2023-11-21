@@ -6,9 +6,9 @@ namespace Assignment.Models.DomainClass
     public class Review
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [Required]
-        public int InvoiceItemID {  get; set; }
+        public Guid InvoiceItemID {  get; set; }
         [ForeignKey("InvoiceItemID")]
         public InvoiceItem InvoiceItem { get; set; }
         [Required]

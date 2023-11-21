@@ -28,7 +28,7 @@ namespace Assignment.Controllers
         }
 
         // GET: Roles/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null || _context.Roles == null)
             {
@@ -88,7 +88,7 @@ namespace Assignment.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Role role)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name")] Role role)
         {
             if (id != role.Id)
             {
@@ -119,7 +119,7 @@ namespace Assignment.Controllers
         }
 
         // GET: Roles/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null || _context.Roles == null)
             {
@@ -155,7 +155,7 @@ namespace Assignment.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RoleExists(int id)
+        private bool RoleExists(Guid id)
         {
           return (_context.Roles?.Any(e => e.Id == id)).GetValueOrDefault();
         }

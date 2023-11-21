@@ -32,7 +32,7 @@ namespace Assignment.Controllers
         }
 
         // GET: ProductImgs/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null || _context.ProductImgs == null)
             {
@@ -137,7 +137,7 @@ namespace Assignment.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductID,Url1,Url2,Url3")] ProductImg productImg)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,ProductID,Url1,Url2,Url3")] ProductImg productImg)
         {
             if (id != productImg.Id)
             {
@@ -169,7 +169,7 @@ namespace Assignment.Controllers
         }
 
         // GET: ProductImgs/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null || _context.ProductImgs == null)
             {
@@ -206,7 +206,7 @@ namespace Assignment.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductImgExists(int id)
+        private bool ProductImgExists(Guid id)
         {
           return (_context.ProductImgs?.Any(e => e.Id == id)).GetValueOrDefault();
         }

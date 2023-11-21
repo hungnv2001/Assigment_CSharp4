@@ -28,7 +28,7 @@ namespace Assignment.Controllers
         }
 
         // GET: Colors/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null || _context.Colors == null)
             {
@@ -88,7 +88,7 @@ namespace Assignment.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Color color)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name")] Color color)
         {
             if (id != color.Id)
             {
@@ -119,7 +119,7 @@ namespace Assignment.Controllers
         }
 
         // GET: Colors/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null || _context.Colors == null)
             {
@@ -139,7 +139,7 @@ namespace Assignment.Controllers
         // POST: Colors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             if (_context.Colors == null)
             {
@@ -155,7 +155,7 @@ namespace Assignment.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ColorExists(int id)
+        private bool ColorExists(Guid id)
         {
           return (_context.Colors?.Any(e => e.Id == id)).GetValueOrDefault();
         }

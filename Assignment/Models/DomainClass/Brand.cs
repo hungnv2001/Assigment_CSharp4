@@ -6,7 +6,7 @@ namespace Assignment.Models.DomainClass
     public class Brand
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [Required]
         [MaxLength(100)]
         [DisplayName("Tên thương hiệu")]

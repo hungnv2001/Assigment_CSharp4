@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Assignment.Models.DomainClass
@@ -6,9 +7,11 @@ namespace Assignment.Models.DomainClass
     public class Cart
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
+        [DisplayName("Số lượng")]
         public int Quantity {  get; set; }
-        public int CustomerID { get; set; }
+        [DisplayName("Tên khách hàng")]
+        public Guid CustomerID { get; set; }
         [ForeignKey("CustomerID")]
         public User User { get; set; }
     }

@@ -27,7 +27,7 @@ namespace Assignment.Controllers
         }
 
         // GET: Reviews/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null || _context.Reviews == null)
             {
@@ -91,7 +91,7 @@ namespace Assignment.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,InvoiceItemID,Rate,Comment")] Review review)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,InvoiceItemID,Rate,Comment")] Review review)
         {
             if (id != review.Id)
             {
@@ -123,7 +123,7 @@ namespace Assignment.Controllers
         }
 
         // GET: Reviews/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null || _context.Reviews == null)
             {
@@ -160,7 +160,7 @@ namespace Assignment.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ReviewExists(int id)
+        private bool ReviewExists(Guid id)
         {
           return (_context.Reviews?.Any(e => e.Id == id)).GetValueOrDefault();
         }

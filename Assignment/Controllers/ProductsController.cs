@@ -34,7 +34,7 @@ namespace Assignment.Controllers
         }
 
         // GET: Products/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null || _context.Products == null)
             {
@@ -71,8 +71,10 @@ namespace Assignment.Controllers
             var product = new Product();
             if (!ModelState.IsValid)
             {
+                var genID= Guid.NewGuid();
                product = new Product()
                {
+                   Id = genID,
                     Name = viewModel.Name,
                     Brand = viewModel.Brand,
                     BrandID = viewModel.BrandID,
@@ -86,7 +88,7 @@ namespace Assignment.Controllers
                 await _context.SaveChangesAsync();
                 var productImg = new ProductImg()
                 {
-                    ProductID =  _context.Products.OrderBy(p=>p.Id).Last().Id,
+                    ProductID =  genID,
 
                 };
                 productImg.Url1 = await ProcessImage(Url1);
@@ -106,7 +108,7 @@ namespace Assignment.Controllers
 
 
         // GET: Products/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null || _context.Products == null)
             {
@@ -127,7 +129,7 @@ namespace Assignment.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,ImageMainUrl,BrandID")] Product product, IFormFile ImageMainUrl)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,Price,ImageMainUrl,BrandID")] Product product, IFormFile ImageMainUrl)
         {
             if (id != product.Id)
             {
@@ -192,7 +194,7 @@ namespace Assignment.Controllers
             return $"/uploads/{newFileName}";
         }
         // GET: Products/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null || _context.Products == null)
             {
@@ -213,7 +215,7 @@ namespace Assignment.Controllers
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             if (_context.Products == null)
             {
@@ -229,7 +231,7 @@ namespace Assignment.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductExists(int id)
+        private bool ProductExists(Guid id)
         {
             return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
         }

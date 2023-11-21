@@ -28,7 +28,7 @@ namespace Assignment.Controllers
         }
 
         // GET: Sizes/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null || _context.Sizes == null)
             {
@@ -88,7 +88,7 @@ namespace Assignment.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name")] Size size)
+        public async Task<IActionResult> Edit(Guid id, [Bind("ID,Name")] Size size)
         {
             if (id != size.ID)
             {
@@ -119,7 +119,7 @@ namespace Assignment.Controllers
         }
 
         // GET: Sizes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null || _context.Sizes == null)
             {
@@ -139,7 +139,7 @@ namespace Assignment.Controllers
         // POST: Sizes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             if (_context.Sizes == null)
             {
@@ -155,7 +155,7 @@ namespace Assignment.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SizeExists(int id)
+        private bool SizeExists(Guid id)
         {
           return (_context.Sizes?.Any(e => e.ID == id)).GetValueOrDefault();
         }

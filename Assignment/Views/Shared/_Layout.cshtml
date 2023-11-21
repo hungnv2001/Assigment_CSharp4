@@ -56,7 +56,7 @@
 					<div class="col-md-3">
 						<div class="header-logo">
 							<a href="#" class="logo">
-								<img style="width: 230px" class="bg-white" src="./img/Mylogo.jpg" alt="">
+								<img style="width: 230px" class="bg-white" src="/img/Mylogo.jpg" alt="">
 							</a>
 						</div>
 					</div>
@@ -149,10 +149,11 @@
 			<div id="responsive-nav">
 				<!-- NAV -->
 				<ul class="main-nav nav navbar-nav">
-					<li class="active"><a href="#">Home</a></li>					
+					@* <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Product</a> *@
 					<li><a href="#">Categories</a></li>
-					<li><a href="#">Laptops</a></li>
-					<li><a href="#">Smartphones</a></li>
+					<li><a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Product</a></li>
+					<li><a class="nav-link text-dark" asp-area="" asp-controller="ProductImgs" asp-action="Index">ProductImg</a></li>
+					<li><a class="nav-link text-dark" asp-area="" asp-controller="Brands" asp-action="Index">ProductImg</a></li>
 					<li><a href="#">Cameras</a></li>
 					<li><a href="#">Accessories</a></li>
 				</ul>

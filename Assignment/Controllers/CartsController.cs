@@ -27,7 +27,7 @@ namespace Assignment.Controllers
         }
 
         // GET: Carts/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null || _context.Carts == null)
             {
@@ -91,7 +91,7 @@ namespace Assignment.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Quantity,CustomerID")] Cart cart)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Quantity,CustomerID")] Cart cart)
         {
             if (id != cart.Id)
             {
@@ -123,7 +123,7 @@ namespace Assignment.Controllers
         }
 
         // GET: Carts/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null || _context.Carts == null)
             {
@@ -144,7 +144,7 @@ namespace Assignment.Controllers
         // POST: Carts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             if (_context.Carts == null)
             {
@@ -160,7 +160,7 @@ namespace Assignment.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CartExists(int id)
+        private bool CartExists(Guid id)
         {
           return (_context.Carts?.Any(e => e.Id == id)).GetValueOrDefault();
         }

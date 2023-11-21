@@ -1,14 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Assignment.Models.DomainClass
 {
     public class Role
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [Required]
         [MaxLength(100)]
+        [DisplayName("Tên chức vụ")]
         public string Name { get; set; }
+        [DisplayName("Trạng thái")]
         public int Status {  get; set; }
         public ICollection<User> Users { get; set; }
     }

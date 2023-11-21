@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Assignment.Models.DomainClass
@@ -6,14 +7,18 @@ namespace Assignment.Models.DomainClass
     public class Invoice
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [Required]
+        [DisplayName("Tổng giá trị")]
         public float TotalPrice {  get; set; }
         [Required]
+        [DisplayName("Ngày đặt")]
         public DateTime BoughtAt { get; set; }
+        [DisplayName("Trạng thái")]
         public int Status {  get; set; }
         [Required]
-        public int CustomerID {  get; set; }
+        [DisplayName("Tên khách hàng")]
+        public Guid CustomerID {  get; set; }
 
         [ForeignKey("CustomerID")]
         public User User { get; set; }

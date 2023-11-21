@@ -27,7 +27,7 @@ namespace Assignment.Controllers
         }
 
         // GET: InvoiceItems/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null || _context.InvoiceItems == null)
             {
@@ -73,7 +73,7 @@ namespace Assignment.Controllers
         }
 
         // GET: InvoiceItems/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null || _context.InvoiceItems == null)
             {
@@ -95,7 +95,7 @@ namespace Assignment.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductVariantId,InvoiceID,Price,Quantity,Status")] InvoiceItem invoiceItem)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,ProductVariantId,InvoiceID,Price,Quantity,Status")] InvoiceItem invoiceItem)
         {
             if (id != invoiceItem.Id)
             {
@@ -128,7 +128,7 @@ namespace Assignment.Controllers
         }
 
         // GET: InvoiceItems/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null || _context.InvoiceItems == null)
             {
@@ -150,7 +150,7 @@ namespace Assignment.Controllers
         // POST: InvoiceItems/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             if (_context.InvoiceItems == null)
             {
@@ -166,7 +166,7 @@ namespace Assignment.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool InvoiceItemExists(int id)
+        private bool InvoiceItemExists(Guid id)
         {
           return (_context.InvoiceItems?.Any(e => e.Id == id)).GetValueOrDefault();
         }

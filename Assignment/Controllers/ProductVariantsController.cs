@@ -27,7 +27,7 @@ namespace Assignment.Controllers
         }
 
         // GET: ProductVariants/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null || _context.ProductVariants == null)
             {
@@ -99,7 +99,7 @@ namespace Assignment.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductID,ColorID,SizeID,Status")] ProductVariant productVariant)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,ProductID,ColorID,SizeID,Status")] ProductVariant productVariant)
         {
             if (id != productVariant.Id)
             {
@@ -133,7 +133,7 @@ namespace Assignment.Controllers
         }
 
         // GET: ProductVariants/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null || _context.ProductVariants == null)
             {
@@ -172,7 +172,7 @@ namespace Assignment.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductVariantExists(int id)
+        private bool ProductVariantExists(Guid id)
         {
           return (_context.ProductVariants?.Any(e => e.Id == id)).GetValueOrDefault();
         }
