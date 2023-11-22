@@ -26,13 +26,11 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
+
     
     endpoints.MapControllerRoute(
         name: "productimgs",
-        pattern: "{controller=ProductImgs}/{action=Index}/{id?}");
+        pattern: "{controller=Products}/{action=Index}/{id?}");
 });
 
 app.UseAuthorization();
