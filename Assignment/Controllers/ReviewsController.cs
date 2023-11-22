@@ -70,7 +70,7 @@ namespace Assignment.Controllers
         }
 
         // GET: Reviews/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null || _context.Reviews == null)
             {

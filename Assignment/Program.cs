@@ -24,11 +24,16 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+    
+    endpoints.MapControllerRoute(
+        name: "productimgs",
+        pattern: "{controller=ProductImgs}/{action=Index}/{id?}");
+});
 
 app.UseAuthorization();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=ProductImgs}/{action=Index}/{id?}");
-
 app.Run();

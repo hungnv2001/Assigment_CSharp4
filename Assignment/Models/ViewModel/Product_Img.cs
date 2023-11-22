@@ -7,6 +7,7 @@ namespace Assignment.Models.ViewModel
 {
     public class Product_Img
     {
+        public Guid Id { get; set; }
         [DisplayName("Tên sản phẩm")]
         public string Name { get; set; }
         [Required]
@@ -15,20 +16,21 @@ namespace Assignment.Models.ViewModel
         [Required]
         [DisplayName("Giá bán")]
         public float Price { get; set; }
-        [Required]
+      
         [DisplayName("Hình ảnh chính")]
-        public string ImageMainUrl { get; set; }
+        public string? ImageMainUrl { get; set; }
         [Required]
         [DisplayName("Thương hiệu")]
         public Guid BrandID { get; set; }
         [DisplayName("Thương hiệu")]
         public Brand Brand { get; set; }
-
+        [DisplayName("Trạng thái")]
+        public int Status {  get; set; }
         [DisplayName("Ảnh 1")]
-        public string Url1 { get; set; }
+        public string? Url1 { get; set; }
         [DisplayName("Ảnh 2")]
-        public string Url2 { get; set; }
+        public string? Url2 { get; set; }
         [DisplayName("Ảnh 3")]
-        public string Url3 { get; set; }
+        public string? Url3 { get; set; }
     }
 }

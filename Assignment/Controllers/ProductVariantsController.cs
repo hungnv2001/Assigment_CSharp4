@@ -20,10 +20,21 @@ namespace Assignment.Controllers
         }
 
         // GET: ProductVariants
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(Guid? id)
         {
             var myContext = _context.ProductVariants.Include(p => p.Color).Include(p => p.Product).Include(p => p.Size);
-            return View(await myContext.ToListAsync());
+            if (id == null || _context.ProductVariants == null)
+            {
+                return View(await myContext.ToListAsync());
+            }
+            var x = myContext.Where(p => p.ProductID == id);
+            ViewBag.ProductID = id;
+
+            //if (id != null)
+            //{
+            //	return RedirectToAction("Create", new { id = id.Value });
+            //}
+            return View(await x.ToListAsync());
         }
 
         // GET: ProductVariants/Details/5
@@ -48,11 +59,12 @@ namespace Assignment.Controllers
         }
 
         // GET: ProductVariants/Create
-        public IActionResult Create()
+        public IActionResult Create(Guid id)
         {
             ViewData["ColorID"] = new SelectList(_context.Colors, "Id", "Name");
-            ViewData["ProductID"] = new SelectList(_context.Products, "Id", "Description");
+            ViewData["ProductID"] = new SelectList(_context.Products, "Id", "Name");
             ViewData["SizeID"] = new SelectList(_context.Sizes, "ID", "Name");
+            ViewData["ProductIdFromIndex"] = id;
             return View();
         }
 
@@ -61,22 +73,23 @@ namespace Assignment.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductID,ColorID,SizeID,Status")] ProductVariant productVariant)
+        public async Task<IActionResult> Create([Bind("ProductID,ColorID,SizeID,Quantity,Status")] ProductVariant productVariant)
         {
             if (!ModelState.IsValid)
             {
                 _context.Add(productVariant);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new { id = productVariant.ProductID });
             }
+
             ViewData["ColorID"] = new SelectList(_context.Colors, "Id", "Name", productVariant.ColorID);
-            ViewData["ProductID"] = new SelectList(_context.Products, "Id", "Description", productVariant.ProductID);
+            ViewData["ProductID"] = new SelectList(_context.Products, "Id", "Name", productVariant.ProductID);
             ViewData["SizeID"] = new SelectList(_context.Sizes, "ID", "Name", productVariant.SizeID);
-            return View(productVariant);
+            return RedirectToAction("Index", new { id = productVariant.ProductID });
         }
 
         // GET: ProductVariants/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null || _context.ProductVariants == null)
             {
@@ -89,7 +102,7 @@ namespace Assignment.Controllers
                 return NotFound();
             }
             ViewData["ColorID"] = new SelectList(_context.Colors, "Id", "Name", productVariant.ColorID);
-            ViewData["ProductID"] = new SelectList(_context.Products, "Id", "Description", productVariant.ProductID);
+            ViewData["ProductID"] = new SelectList(_context.Products, "Id", "Name", productVariant.ProductID);
             ViewData["SizeID"] = new SelectList(_context.Sizes, "ID", "Name", productVariant.SizeID);
             return View(productVariant);
         }
@@ -99,7 +112,7 @@ namespace Assignment.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,ProductID,ColorID,SizeID,Status")] ProductVariant productVariant)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,ProductID,ColorID,SizeID,Quantity,Status")] ProductVariant productVariant)
         {
             if (id != productVariant.Id)
             {
@@ -124,12 +137,12 @@ namespace Assignment.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new { id = productVariant.ProductID });
             }
             ViewData["ColorID"] = new SelectList(_context.Colors, "Id", "Name", productVariant.ColorID);
             ViewData["ProductID"] = new SelectList(_context.Products, "Id", "Description", productVariant.ProductID);
             ViewData["SizeID"] = new SelectList(_context.Sizes, "ID", "Name", productVariant.SizeID);
-            return View(productVariant);
+            return RedirectToAction("Index", new { id = productVariant.ProductID });
         }
 
         // GET: ProductVariants/Delete/5
@@ -156,7 +169,7 @@ namespace Assignment.Controllers
         // POST: ProductVariants/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             if (_context.ProductVariants == null)
             {
@@ -167,14 +180,14 @@ namespace Assignment.Controllers
             {
                 _context.ProductVariants.Remove(productVariant);
             }
-            
+
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", new { id = productVariant.ProductID });
         }
 
         private bool ProductVariantExists(Guid id)
         {
-          return (_context.ProductVariants?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.ProductVariants?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

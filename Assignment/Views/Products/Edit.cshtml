@@ -1,4 +1,4 @@
-﻿@model Assignment.Models.DomainClass.Product
+﻿@model Assignment.Models.ViewModel.Product_Img;
 
 @{
     ViewData["Title"] = "Edit";
@@ -9,23 +9,17 @@
 <h4>Product</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-          @*   <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div> *@
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" aria-label="With textarea"></textarea>
+                <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -33,21 +27,47 @@
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
+           
 
-            <div class="form-group">
-                <label asp-for="ImageMainUrl" class="control-label"></label>
-                <br />
-                <img style="width:90px" src="@Model.ImageMainUrl" alt="Product Image" />
-                <input asp-for="ImageMainUrl" type="file" class="form-control" />
-                <span asp-validation-for="ImageMainUrl" class="text-danger"></span>
+            <!-- Các trường input cho -->
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <img style="height: 150px" src="@Model.ImageMainUrl" alt="Product Image" />
+                    <label asp-for="ImageMainUrl" class="control-label"></label>
+                    <input asp-for="ImageMainUrl" type="file" class="form-control" />
+                    <span asp-validation-for="ImageMainUrl" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm-3">
+                    <img style="height: 150px" src="@Model.Url1" alt="Product Image" /><br />
+                    <label asp-for="Url1" class="control-label"></label>
+                    <input asp-for="Url1" type="file" class="form-control" />
+                </div>
+                <div class="form-group col-sm-3">
+                    <img style="height: 150px" src="@Model.Url2" alt="Product Image" /><br />
+                    <label asp-for="Url2" class="control-label"></label>
+                    <input asp-for="Url2" type="file" class="form-control" />
+                </div>
+                <div class="form-group col-sm-3">
+                    <img style="height: 150px" src="@Model.Url3" alt="Product Image" /><br />
+                    <label asp-for="Url3" class="control-label"></label>
+                    <input asp-for="Url3" type="file" class="form-control" />
+                </div>
             </div>
+            <!--Hết-->
             <div class="form-group">
                 <label asp-for="BrandID" class="control-label"></label>
                 <select asp-for="BrandID" class="form-control" asp-items="ViewBag.BrandID"></select>
-                <span asp-validation-for="BrandID" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-control">
+                    <option value="1">Đang bán</option>
+                    <option value="0">Ngừng bán</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>

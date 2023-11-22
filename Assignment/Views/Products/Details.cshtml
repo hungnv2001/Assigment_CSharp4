@@ -27,43 +27,7 @@
 		</dt>
 		<dd class="col-sm-10">
 			@Html.DisplayFor(model => model.Price)
-		</dd>
-		<div class="row g-0">
-			<div class="col-3 ">
-				<dt >
-					@Html.DisplayNameFor(model => model.ImageMainUrl)
-				</dt>
-				<dd >
-					<img style="width:90px" src="@Model.ImageMainUrl"  />
-				</dd>
-			</div>
-			<div class="col-3 ">
-				<dt>
-					Ảnh sản phẩm 1
-				</dt>
-				<dd>
-					<img style="width:90px" src="@Model.ProductImgs.ToList()[0].Url1"  />
-				</dd>
-			</div>
-			<div class="col-3 ">
-				<dt>
-					Ảnh sản phẩm 2
-				</dt>
-				<dd>
-					<img style="width:90px" src="@Model.ProductImgs.ToList()[0].Url2" />
-				</dd>
-			</div>
-			<div class="col-3 ">
-				<dt>
-					Ảnh sản phẩm 3
-				</dt>
-				<dd>
-					<img style="width:90px" src="@Model.ProductImgs.ToList()[0].Url3"  />
-				</dd>
-			</div>
-		</div>
-
-
+		</dd>	
 
 		<dt class="col-sm-2">
 			@Html.DisplayNameFor(model => model.Brand)
@@ -71,7 +35,49 @@
 		<dd class="col-sm-10">
 			@Html.DisplayFor(model => model.Brand.Name)
 		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Status)
+		</dt>
+		<dd class="col-sm-10">
+			@((Model.Status == 1) ? "Đang bán" : "Ngừng bán")
+		</dd>
 	</dl>
+	<div class="row">
+		<div class="col-sm-3 ">
+			<span>
+				@Html.DisplayNameFor(model => model.ImageMainUrl) <br />
+			</span>
+			<span>
+				<img style="height: 150px" src="@Model.ImageMainUrl" />
+			</span>
+		</div>
+		<div class="col-sm-3 ">
+			<span>
+				Ảnh sản phẩm 1<br />
+			</span>
+			<span>
+				<img style="height: 150px" src="@Model.ProductImgs.ToList()[0].Url1" />
+			</span>
+		</div>
+		<div class="col-sm-3 ">
+			<span>
+				Ảnh sản phẩm 2<br />
+			</span>
+			<span>
+				<img style="height: 150px" src="@Model.ProductImgs.ToList()[0].Url2" />
+			</span>
+		</div>
+		<div class="col-sm-3 ">
+			<span>
+				Ảnh sản phẩm 3<br />
+			</span>
+			<span>
+				<img style="height: 150px" src="@Model.ProductImgs.ToList()[0].Url3" />
+			</span>
+		</div>
+	</div>
+	<br>
+
 </div>
 <div>
 	<a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
