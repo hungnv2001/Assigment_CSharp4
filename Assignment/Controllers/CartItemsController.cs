@@ -47,6 +47,7 @@ namespace Assignment.Controllers
         }
 
         // GET: CartItems/Create
+        [HttpGet]
         public IActionResult Create()
         {
             ViewData["CartID"] = new SelectList(_context.Carts, "Id", "Id");
@@ -57,23 +58,36 @@ namespace Assignment.Controllers
         // POST: CartItems/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Quantiy,ProductVariantID,CartID")] CartItem cartItem)
-        {
-            if (!ModelState.IsValid)
-            {
-                _context.Add(cartItem);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CartID"] = new SelectList(_context.Carts, "Id", "Id", cartItem.CartID);
-            ViewData["ProductVariantID"] = new SelectList(_context.ProductVariants, "Id", "Id", cartItem.ProductVariantID);
-            return View(cartItem);
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("Id,Quantiy,ProductVariantID,CartID")] CartItem cartItem)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        _context.Add(cartItem);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["CartID"] = new SelectList(_context.Carts, "Id", "Id", cartItem.CartID);
+        //    ViewData["ProductVariantID"] = new SelectList(_context.ProductVariants, "Id", "Id", cartItem.ProductVariantID);
+        //    return View(cartItem);
+        //}
+		[HttpPost]
+		public async Task<IActionResult> Create(Guid? IdSP)
+		{
 
-        // GET: CartItems/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+            if (IdSP == null || HttpContext.User.Identity.IsAuthenticated)
+            {
+				var x = IdSP;
+				string userName = HttpContext.User.Identity.Name;
+				//tôi cần trả về là không thực hiện gì cả
+				
+			}
+			string returnUrl = HttpContext.Request.Headers["Referer"].ToString();
+			return Redirect(returnUrl);
+		}
+		// GET: CartItems/Edit/5
+		public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.CartItems == null)
             {

@@ -1,6 +1,7 @@
 ﻿using Assignment.Models.DomainClass;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
+using Assignment.Models.ViewModel;
 
 namespace Assignment.Models.Context
 {
@@ -26,6 +27,7 @@ namespace Assignment.Models.Context
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get;        set; }
         public DbSet<DomainClass.Size> Sizes { get; set; }
+        public DbSet<Assignment.Models.ViewModel.Product_Img>? Product_Img { get; set; }
 
     }
 }

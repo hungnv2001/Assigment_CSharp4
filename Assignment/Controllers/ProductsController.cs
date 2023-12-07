@@ -12,6 +12,8 @@ using System.Security.Policy;
 using Assignment.Models;
 using SQLitePCL;
 using Assignment.Models.ViewModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Assignment.Controllers
 {
@@ -29,23 +31,49 @@ namespace Assignment.Controllers
 		// GET: Products
 		public async Task<IActionResult> Index()
 		{
-			var myContext = _context.Products.Include(p => p.Brand).Include(p => p.ProductVariants);
-
-			myContext.Select(product => new
+			var myContext = _context.Products.Include(p => p.Brand).Include(p => p.ProductVariants).ThenInclude(p => p.Color).Include(p => p.ProductVariants).ThenInclude(p => p.Size).Where(p => p.Status == 1).ToList();
+			myContext = myContext.Where(p => p.ProductVariants.Any(p => p.Quantity > 0 && p.Status == 1)).ToList();
+			if (myContext != null)
 			{
-				product.Id,
-				product.Name,
-				SizesAndColors = product.ProductVariants
-				.Select(pv => new
-				{
-					SizeName = _context.Sizes.FirstOrDefault(s => s.ID == pv.SizeID) == null ? _context.Sizes.FirstOrDefault(s => s.ID == pv.SizeID) : null,
-					ColorName = _context.Colors.FirstOrDefault(c => c.Id == pv.ColorID) == null ? _context.Colors.FirstOrDefault(c => c.Id == pv.ColorID) : null
-				})
-				 .ToList()
-			}).ToList();
-			return View(await myContext.ToListAsync());
+				return View(myContext);
+			}
+			return NotFound();
+		}
+		public async Task<IActionResult> ListProduct()
+		{
+			var myContext = _context.Products.Include(p => p.Brand).Include(p => p.ProductImgs).Include(p => p.ProductVariants).ThenInclude(p => p.Color).Include(p => p.ProductVariants).ThenInclude(p => p.Size).Where(p => p.Status == 1).ToList();
+			myContext = myContext.Where(p => p.ProductVariants.Any(p => p.Quantity > 0 && p.Status == 1)).ToList();
+			
+			if (myContext != null)
+			{
+				return View(myContext);
+			}
+			return NotFound();
 		}
 
+		[HttpPost]
+		[HttpGet]
+		public async Task<IActionResult> Shop(string? keyword, int? id)
+		{
+			if (id == null)
+			{
+				ViewBag.Page = 1;
+			}
+			else
+			{
+				ViewBag.Page = id;
+			}
+			if (keyword == null)
+			{
+				keyword = "";
+			}
+			ViewBag.keyword = keyword;
+			var myContext = _context.Products.Include(p => p.Brand).Include(p => p.ProductVariants).ThenInclude(p => p.Color).Include(p => p.ProductVariants).ThenInclude(p => p.Size).Where(p => p.Status == 1).ToList();
+			myContext = myContext.Where(p => p.ProductVariants.Count > 0).Where(p => p.ProductVariants.Any(p => p.Quantity > 0 && p.Status == 1)).ToList();
+			myContext = myContext.Where(p => p.Name.ToLower().Contains(keyword.ToLower()) || p.Brand.Name.ToLower().Contains(keyword.ToLower())).ToList();
+			return View(myContext);
+
+		}
 		// GET: Products/Details/5
 		public async Task<IActionResult> Details(Guid? id)
 		{
@@ -55,9 +83,15 @@ namespace Assignment.Controllers
 			}
 
 			var product = await _context.Products
-				.Include(p => p.Brand)
+				.Include(p => p.Brand).Include(p => p.ProductVariants).Include(p => p.ProductImgs)
 				.FirstOrDefaultAsync(m => m.Id == id);
-			product.ProductImgs = _context.ProductImgs.Where(p => p.ProductID == id).ToList();
+			var dataVariant = product.ProductVariants;
+			foreach (var item in dataVariant)
+			{
+				item.Size = _context.Sizes.FirstOrDefault(m => m.ID == item.SizeID);
+				item.Color = _context.Colors.FirstOrDefault(m => m.Id == item.ColorID);
+			}
+			product.ProductVariants = dataVariant;
 			if (product == null)
 			{
 				return NotFound();
@@ -67,6 +101,7 @@ namespace Assignment.Controllers
 		}
 
 		// GET: Products/Create
+		[Authorize(Roles = "Admin")]
 		public IActionResult Create()
 		{
 			ViewData["BrandID"] = new SelectList(_context.Brands, "Id", "Name");
@@ -79,6 +114,7 @@ namespace Assignment.Controllers
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Create(Models.ViewModel.Product_Img viewModel, IFormFile ImageMainUrl, IFormFile Url1, IFormFile Url2, IFormFile Url3)
 		{
 			var product = new Product();
@@ -171,7 +207,7 @@ namespace Assignment.Controllers
 			{
 				try
 				{
-					var productI=new Product();
+					var productI = new Product();
 
 
 					if (ImageMainUrl != null)
@@ -180,7 +216,7 @@ namespace Assignment.Controllers
 					}
 					else
 					{
-						 productI = _context.Products.FirstOrDefault(p => p.Id == id);
+						productI = _context.Products.FirstOrDefault(p => p.Id == id);
 					}
 					product = new Product()
 					{
@@ -190,24 +226,31 @@ namespace Assignment.Controllers
 						BrandID = viewModel.BrandID,
 						Description = viewModel.Description,
 						Price = viewModel.Price,
-						ImageMainUrl = productI!=null?productI.ImageMainUrl: viewModel.ImageMainUrl,
 						Status = viewModel.Status,
 
 					};
-                    var existingProduct = _context.Products.Find(product.Id);
-                    if (existingProduct != null)
-                    {
-                        _context.Entry(existingProduct).CurrentValues.SetValues(product);
-                    }
-                    else
-                    {
-                        _context.Add(product);
-                    }
-                    await _context.SaveChangesAsync();
+					if (productI.ImageMainUrl != null)
+					{
+						product.ImageMainUrl = productI.ImageMainUrl;
+					}
+					else
+					{
+						product.ImageMainUrl = viewModel.ImageMainUrl;
+					}
+					var existingProduct = _context.Products.Find(product.Id);
+					if (existingProduct != null)
+					{
+						_context.Entry(existingProduct).CurrentValues.SetValues(product);
+					}
+					else
+					{
+						_context.Add(product);
+					}
+					await _context.SaveChangesAsync();
 
 
 
-                    var productImg = _context.ProductImgs.FirstOrDefault(p => p.ProductID == id);
+					var productImg = _context.ProductImgs.FirstOrDefault(p => p.ProductID == id);
 					if (Url1 != null)
 					{
 						productImg.Url1 = await ProcessImage(Url1);
@@ -220,8 +263,8 @@ namespace Assignment.Controllers
 					{
 						productImg.Url3 = await ProcessImage(Url3);
 					}
-					
-					
+
+
 					_context.Update(productImg);
 
 					await _context.SaveChangesAsync();

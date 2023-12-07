@@ -30,5 +30,10 @@ namespace Assignment.Models.DomainClass
         public int Status {  get; set; }
         public ICollection<ProductImg> ProductImgs { get; set;} = new List<ProductImg>();
 		public ICollection<ProductVariant> ProductVariants { get; set;}
-    }
+
+		internal Product Where(Func<object, bool> value)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

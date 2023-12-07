@@ -26,22 +26,20 @@ namespace Assignment.Models.DomainClass
         [ForeignKey("RoleID")]
         public Role Role { get; set; }
 
-        [Required]
         [MaxLength(100)]
         [DisplayName("Họ và tên")]
-        public string FullName  { get; set; }
-        [Required]
+        public string? FullName  { get; set; }
 
-        public string Email { get; set; }
-        [Required]
+
+        public string? Email { get; set; }
         [MaxLength(10)]
         [DisplayName("Số điện thoại")]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
-        [Required]
+        
         [MaxLength(250)]
         [DisplayName("Địa chỉ")]
-        public string Address { get; set;}
+        public string? Address { get; set;}
 
         [DisplayName("Trạng thái")]
         public int Status {  get; set; }

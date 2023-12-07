@@ -1,0 +1,57 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model Assignment.Models.DomainClass.User;
+<div class="container mx-auto text-center" style="margin: 100px">
+    
+
+        <div class="card o-hidden border-0 shadow-lg " >
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+            <div class="row " style="font-size:27px">
+                    <div class="col-6 ">
+                        <img class="w-100"src="/img/photo-1518020382113-a7e8fc38eac9.jpg" />
+                    </div>
+                    <div class="col-6">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <br />
+                                <h1 class="h3 text-gray-900 mb-4">Welcome Back!</h1>
+                            </div>
+                            <form class="user" asp-action="Login" asp-controller="Users">
+                                <br />
+                                <div class="form-group">
+                                    <input type="text" asp-for="UserName" class="form-control " placeholder="Tên đăng nhập...">
+                                </div>
+                                <br />
+                                <div class="form-group">
+                                <input type="password" asp-for="Password" class="form-control " placeholder="Mật khẩu">
+                                </div>
+                               <br/>
+                                <br />
+                            <button class="border-0 text-warning" type="submit">
+                                <a class="btn btn-primary h-75 btn-block">
+                                    Login
+                                </a>
+                            </button>
+                                <br />
+                            </form>
+                            <br />
+                            <br />
+                            <div class="text-center">
+                                <a class="small" href="forgot-password.html">Forgot Password?</a>
+                            </div>
+                           
+                            <div class="text-center">
+                            <a class="small" asp-action="Register" asp-controller="Users">Create an Account!</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    
+</div>

@@ -1,0 +1,38 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model IEnumerable<Assignment.Models.DomainClass.Brand>
+<div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+	<h3><a asp-action="Index" asp-controller="Products" class="nav-item nav-link">Home</a></h3>
+	<h3><a asp-action="Shop" asp-controller="Products" class="nav-item nav-link">Shop</a></h3>
+	<h3>	<a asp-action="ListProduct" asp-controller="Products" class="nav-item nav-link">Create</a></h3>
+
+
+
+	<div class="navbar-nav mr-auto py-0">
+
+		@foreach (var item in Model)
+		{
+			<h3><a href="https://localhost:7029/" class="nav-item nav-link">@item.Name</a></h3>
+
+		}
+	</div>
+	<div class="navbar-nav ml-auto py-0 float-end">
+		@if (!User.Identity.IsAuthenticated)
+		{
+			<h3><a asp-controller="Users" asp-action="Login" class="nav-item nav-link">Login</a></h3>
+		}
+		@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+		{
+			<h3><a asp-controller="Users" asp-action="Login" style="margin-left:20px">Quản lý</a></h3>
+		}
+		@if (User.Identity.IsAuthenticated)
+		{
+			<h3 class="me-2" style="margin-left:20px">@User.Identity.Name</h3>
+			<h3><a  asp-controller="Users" asp-action="LogOut" style="margin-left:20px">Thoát</a></h3>
+		}	
+
+	</div>
+</div>
