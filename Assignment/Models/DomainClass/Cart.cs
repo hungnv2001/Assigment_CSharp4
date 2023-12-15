@@ -14,5 +14,6 @@ namespace Assignment.Models.DomainClass
         public Guid CustomerID { get; set; }
         [ForeignKey("CustomerID")]
         public User User { get; set; }
+        public virtual List<CartItem> CartItems { get;}
     }
 }

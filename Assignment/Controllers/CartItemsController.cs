@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Assignment.Models.Context;
 using Assignment.Models.DomainClass;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Assignment.Controllers
 {
@@ -19,11 +21,32 @@ namespace Assignment.Controllers
             _context = context;
         }
 
+     
+
         // GET: CartItems
         public async Task<IActionResult> Index()
         {
-            var myContext = _context.CartItems.Include(c => c.Cart).Include(c => c.ProductVariant);
-            return View(await myContext.ToListAsync());
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return View("Not_log");
+            }
+            var y = _context.CartItems.ToList();
+            var myContext = _context.CartItems.Include(p => p.ProductVariant).ThenInclude(p => p.Size).Include(p => p.ProductVariant).ThenInclude(p => p.Color).Include(p => p.ProductVariant).ThenInclude(p => p.Product).Include(p=>p.Cart);
+            var x = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var result= new List<CartItem>();
+            if (x!=null)
+            {
+                
+            result = myContext.Where(p => p.Cart.CustomerID.ToString() == x.ToString()).ToList();
+            }
+
+            if (result.Count==0)
+            {
+                return View("Emty");
+            }
+            return View(result);
+            
+            
         }
 
         // GET: CartItems/Details/5
@@ -55,37 +78,57 @@ namespace Assignment.Controllers
             return View();
         }
 
-        // POST: CartItems/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Id,Quantiy,ProductVariantID,CartID")] CartItem cartItem)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        _context.Add(cartItem);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["CartID"] = new SelectList(_context.Carts, "Id", "Id", cartItem.CartID);
-        //    ViewData["ProductVariantID"] = new SelectList(_context.ProductVariants, "Id", "Id", cartItem.ProductVariantID);
-        //    return View(cartItem);
-        //}
-		[HttpPost]
-		public async Task<IActionResult> Create(Guid? IdSP)
-		{
+        //POST: CartItems/Create
+        //To protect from overposting attacks, enable the specific properties you want to bind to.
+        //For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 
-            if (IdSP == null || HttpContext.User.Identity.IsAuthenticated)
+       [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Quantiy,ProductVariantID,CartID")] CartItem cartItem)
+        {
+            if (!ModelState.IsValid)
             {
-				var x = IdSP;
-				string userName = HttpContext.User.Identity.Name;
-				//tôi cần trả về là không thực hiện gì cả
+                _context.Add(cartItem);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["CartID"] = new SelectList(_context.Carts, "Id", "Id", cartItem.CartID);
+            ViewData["ProductVariantID"] = new SelectList(_context.ProductVariants, "Id", "Id", cartItem.ProductVariantID);
+            return View(cartItem);
+        }
+        [HttpPost]
+		    public async Task<IActionResult> AddCart(Guid IdSP)
+		    {
+
+                if (IdSP != null && HttpContext.User.Identity.IsAuthenticated)
+                {
+				    var x = IdSP;
+				    string userid = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                    var idCart = _context.Carts.First(p => p.CustomerID.ToString() == userid.ToString()).Id;
+                    var checkValid=_context.CartItems.FirstOrDefault(p=>p.CartID == idCart && p.ProductVariantID==IdSP);
+                    if (checkValid != null)
+                    {
+                        checkValid.Quantiy++;
+                        _context.Update(checkValid);
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        var newCartItem = new CartItem()
+                        {
+                            CartID = idCart,
+                            Quantiy = 1,
+                            ProductVariantID = IdSP
+
+                        };
+                        _context.Add(newCartItem);
+                        _context.SaveChanges();
+                    }
 				
-			}
-			string returnUrl = HttpContext.Request.Headers["Referer"].ToString();
-			return Redirect(returnUrl);
-		}
+			    }
+			    string returnUrl = HttpContext.Request.Headers["Referer"].ToString();
+			    return Redirect(returnUrl);
+		    }
 		// GET: CartItems/Edit/5
 		public async Task<IActionResult> Edit(int? id)
         {

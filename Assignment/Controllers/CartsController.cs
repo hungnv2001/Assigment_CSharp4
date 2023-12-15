@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Assignment.Models.Context;
 using Assignment.Models.DomainClass;
+using System.Security.Claims;
 
 namespace Assignment.Controllers
 {
@@ -22,8 +23,26 @@ namespace Assignment.Controllers
         // GET: Carts
         public async Task<IActionResult> Index()
         {
-            var myContext = _context.Carts.Include(c => c.User);
-            return View(await myContext.ToListAsync());
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return View("Not_log");
+            }
+            var y = _context.CartItems.ToList();
+            var myContext = _context.CartItems.Include(p => p.ProductVariant).ThenInclude(p => p.Size).Include(p => p.ProductVariant).ThenInclude(p => p.Color).Include(p => p.ProductVariant).ThenInclude(p => p.Product).Include(p => p.Cart);
+            var x = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var result = new List<CartItem>();
+            if (x != null)
+            {
+
+                result = myContext.Where(p => p.Cart.CustomerID.ToString() == x.ToString()).ToList();
+            }
+
+            if (result == null)
+            {
+                return View("Emty");
+            }
+            return View(result);
+
         }
 
         // GET: Carts/Details/5

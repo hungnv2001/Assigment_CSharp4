@@ -110,8 +110,8 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Popup -->
+                <form asp-action="AddCart" method="post" id="myForm" asp-controller="CartItems" asp-route-IdSP="IdSP">
                 <div id="colorSizeSelectionPopup-@count" class="modal" data-backdrop="static">
                     <!-- Mỗi popup có ID độc nhất bằng cách thêm count vào ID -->
                     <div class="modal-dialog">
@@ -121,27 +121,51 @@
                                 <button type="button" class="close" data-dismiss="modal"><i class="bi bi-x-lg bg-black"></i></button>
                             </div>
                             <div class="modal-body">
-                                <select id="productVariant-@count" class="form-control mb-2">
+                                    <select id="productVariant-@count" class="form-control mb-2" onchange="addToCartClicked()">
                                     @foreach (var productVariant in item.ProductVariants)
                                     {
                                         <option value="@productVariant.Id">@productVariant.Color.Name - @productVariant.Size.Name</option>
                                     }
                                 </select>
+                                    <input type="hidden" name="IdSP" id="idsp">
                             </div>
                             <div class="modal-footer">
                                 <!-- Sử dụng class để xác định nút "Add to Cart" trong popup -->
-                                <button type="button" class="btn btn-success addToCartButtonPopup" data-dismiss="modal">Add to Cart</button>
+                                <button type="submit" class="btn btn-success addToCartButtonPopup" >Add to Cart</button>
                             </div>
                         </div>
                     </div>
                 </div>
+                </form>
+                <script>
+                    document.getElementById("idsp").value = document.getElementById("productVariant-@count").value;
+                    function addToCartClicked() {
+                        // Lấy giá trị đang chọn từ dropdown
+                        var selectedValue = document.getElementById("productVariant-@count").value;
+                        alert(selectedValue);
+                        // Kiểm tra xem giá trị có tồn tại không
+                        if (selectedValue) {
+                            // Gọi action 'AddCart' trên controller 'CartItems' và chuyển giá trị 'IdSP'
+                            document.getElementById("idsp").value = selectedValue;
+                            alert("ok");
+                            
+                        } else {
+                            // Thông báo hoặc xử lý nếu không có giá trị được chọn
+                            console.log("Vui lòng chọn một giá trị trước khi thêm vào Giỏ hàng");
+                        }
+
+                        
+                       
+                    }
+                </script>
+
 
                 if (count == 12)
                 {
                     break;
                 }
             }
-
+            <input type="hidden" id="hiddenInput" value="@User.Identity.Name">
             <!-- Đặt sau vòng lặp để đảm bảo chỉ bao gồm một lần -->
             <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
             <script src=@("https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js")></script>
@@ -155,8 +179,15 @@
                     });
 
                     $(".addToCartButtonPopup").click(function () {
-                        alert("Item added to cart!");
-                        $(this).closest(".modal").modal("hide");
+                        var hiddenInput = document.getElementById("hiddenInput").value;
+                      
+                        if (!hiddenInput) {
+                            alert("Hãy đăng nhập trước!");
+                            return;
+                        } else {
+                            alert("Item added to cart!");
+                        }
+                            $(this).closest(".modal").modal("hide");
                     });  
                     $(".close").click(function () {
                         $(this).closest(".modal").modal("hide");
@@ -177,6 +208,7 @@
         </div>
     </div>
 </div>
+
 <div class="container-fluid offer pt-5">
     <div class="row px-xl-5">
         <div class="col-md-6 pb-4">

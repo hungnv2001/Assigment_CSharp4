@@ -62,7 +62,7 @@
 			}
 			<h3 class="font-weight-semi-bold mb-4">@Model.Price</h3>
 			<p class="mb-4" style="white-space: pre-line">@Model.Description</p>
-			<form asp-action="Create" method="post" id="myForm" asp-controller="CartItems">
+			<form asp-action="AddCart" method="post" id="myForm" asp-controller="CartItems">
 			<div class=" mb-3">
 				<p class="text-dark font-weight-medium mb-0 mr-3">Màu sắc, kích thước:</p>			
 					@foreach (var item in listColor)

@@ -46,6 +46,7 @@ namespace Assignment.Controllers
         {
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim(ClaimTypes.Role, user.Role.Name),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
 
         };
 
